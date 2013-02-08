@@ -40,6 +40,7 @@ int game(SDL_Surface *screen) {
 	fontSmall = TTF_OpenFont("FreeSansBold.ttf", 20);
 	fontLarge = TTF_OpenFont("FreeSansBold.ttf", 42);
 	if (!fontSmall || !fontLarge || !fontTiny) {
+		puts(TTF_GetError());
 		return -1;
 	}
 
@@ -157,6 +158,8 @@ int game(SDL_Surface *screen) {
 			}
 		}
 
+#ifdef UMEC_CONTROLLER
+
 		// Handle keypad events
 		struct input_event *i = controller_read();
 		if (i != NULL && i->type == 1) {
@@ -193,6 +196,31 @@ int game(SDL_Surface *screen) {
 				} break;
 			}
 		}
+
+#else
+
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) switch (e.type) {
+			case SDL_KEYDOWN: switch (e.key.keysym.sym) {
+				case SDLK_LEFT: left = true; break;
+				case SDLK_RIGHT: right = true; break;
+				case SDLK_UP: up = true; break;
+				case SDLK_DOWN: down = true; break;
+				case SDLK_ESCAPE: leave = true;
+				case SDLK_m: handle_tasks(screen, &player); break;
+				case SDLK_n: show_nametags = !show_nametags; break;
+			} break;
+			case SDL_KEYUP: switch (e.key.keysym.sym) {
+				case SDLK_LEFT: left = false; break;
+				case SDLK_RIGHT: right = false; break;
+				case SDLK_UP: up = false; break;
+				case SDLK_DOWN: down = false; break;
+			} break;
+			case SDL_QUIT:
+				leave = true;
+				break;
+		}
+#endif
 
 		float newx = x, newy = y;
 		if (down && right) {player.orientation=SOUTHEAST; newx-=DIAG_INCREMENT; newy-=DIAG_INCREMENT;}
@@ -300,7 +328,11 @@ int game(SDL_Surface *screen) {
 					} else { // Fixed position e.g. player
 						drawrect.x=de->x; drawrect.y=de->y;
 					}
-					SDL_BlitSurface(de->s, NULL, screen, &drawrect);
+					if (!de->s) {
+						puts("Hey, a null drawable!");
+					} else {
+						SDL_BlitSurface(de->s, NULL, screen, &drawrect);
+					}
 				}
 			}
 		}

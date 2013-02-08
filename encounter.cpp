@@ -10,6 +10,7 @@ bool init_encounters() {
 	hello2 = Mix_LoadWAV("audio/hello2.wav");
 	hello3 = Mix_LoadWAV("audio/hello3.wav");
 	hello4 = Mix_LoadWAV("audio/hello4.wav");
+	puts(Mix_GetError());
 	return hello1 && hello2 && hello3 && hello4;
 }
 
