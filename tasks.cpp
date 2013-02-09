@@ -47,11 +47,20 @@ void handle_tasks(SDL_Surface *screen, character *c) {
 
 	bool leave = false;
 	while (!leave) {
+#ifdef UMEC_CONTROLLER
 		struct input_event *i = controller_read();
 		if (i != NULL && i->type == 1) {
 			switch (i->value) {
 				case PKEY_PRESS: leave = true;
 			}
 		}
+#else
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			switch (e.type) {
+				case SDL_KEYDOWN: leave=true;
+			}
+		}
+#endif
 	}
 }

@@ -252,7 +252,7 @@ int game(SDL_Surface *screen) {
 
 			player_enters_tile(&player);
 		}
-		playerDrawer->s = zombie->tiles[player.orientation * 44 + (player.step/3) + 4];
+		playerDrawer->s = zombie->tiles[/*player.orientation * 44 + (player.step/3) + 4*/0];
 
 		// Move NPCs
 		for (int i=0; i<NPCCOUNT; i++) {
@@ -309,7 +309,7 @@ int game(SDL_Surface *screen) {
 				float targetj = (npcs[i].j * npcs[i].progress) + (npcs[i].lastj * (1-npcs[i].progress));
 				npcs[i].d->x = TILE_TO_SCREENX(targeti,targetj,TILE_WIDTH,TILE_HEIGHT)+zombie->xoff;
 				npcs[i].d->y = TILE_TO_SCREENY(targeti,targetj,TILE_WIDTH,TILE_HEIGHT)+zombie->yoff;
-				npcs[i].d->s=zombie->tiles[44*(npcs[i].orientation%8)+4+((int) (npcs[i].progress*8)%8)];
+				npcs[i].d->s=zombie->tiles[/*44*(npcs[i].orientation%8)+4+((int) (npcs[i].progress*8)%8)*/0];
 			}
 		}
 
